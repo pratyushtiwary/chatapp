@@ -27,8 +27,8 @@ async function getUsersList(userId){
                 messages m
             INNER JOIN(
                 SELECT MAX(id) id,
-                    sentBy,
-                    sentTo
+                    messages.sentBy,
+                    messages.sentTo
                 FROM
                     messages
                 WHERE
