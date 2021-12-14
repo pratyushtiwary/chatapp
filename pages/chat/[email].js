@@ -98,7 +98,6 @@ export default function Index(){
                 }
             })
             socket.on("load-initial-chat",function(data){
-                console.log(data);
                 setMsgs(data.chats);
             });
             if(em){
@@ -149,15 +148,7 @@ export default function Index(){
         if(socket){
             function update(data){
                 if(currUser){
-                    if(TOKEN.email === data.from){
-                        let d = {
-                            msg: data.msg,
-                            on: data.on,
-                            byMe: true,
-                        };
-                        setMsgs((m)=>[...m,d]);
-                    }
-                    else if(currUser.email !== data.from){
+                    if(currUser.email === data.from){
                         let d = {
                             msg: data.msg,
                             on: data.on,
@@ -193,30 +184,65 @@ export default function Index(){
                     }
                 }
                 else{
-                    setUsers((u)=>{
-                        let d = data;
-                        d.id = u.length;
-                        d.recentMessage = data.msg;
-                        d.avatar = d.name+".svg";
-                        d.email = d.from;
-                        let oldUsers = u;
-                        let newUsers = []
-                        if(oldUsers.length>1){
-                            newUsers = unique(oldUsers,data);
-                        }
-                        else{
-                            newUsers = [d];
-                        }
-                        return newUsers;
-                    });
+                    if(data.from !== TOKEN.email){
+                        setUsers((u)=>{
+                            let d = search(u,data.from);
+                            if(d!==-1){
+                                d.recentMessage = data.msg;
+                                let oldUsers = u;
+                                let newUsers = []
+                                if(oldUsers.length>1){
+                                    newUsers = unique(oldUsers,d);
+                                }
+                                else{
+                                    newUsers = [d];
+                                }
+                                return newUsers;
+                            }
+                            else{
+                                let temp = data;
+                                data.email = data.to;
+                                data.name = data.name;
+                                data.avatar = data.name+".svg";
+                                data.recentMessage = data.msg;
+                                let newUsers = [...u,temp];
+                                return newUsers;
+                            }
+                        });
+                    }
+                    else{
+                        setUsers((u)=>{
+                            let d = search(u,data.to);
+                            if(d!==-1){
+                                d.recentMessage = data.msg;
+                                let oldUsers = u;
+                                let newUsers = []
+                                if(oldUsers.length>1){
+                                    newUsers = unique(oldUsers,d);
+                                }
+                                else{
+                                    newUsers = [d];
+                                }
+                                return newUsers;
+                            }
+                            else{
+                                let temp = data;
+                                data.email = data.to;
+                                data.name = data.name;
+                                data.avatar = data.name+".svg";
+                                data.recentMessage = data.msg;
+                                let newUsers = [...u,temp];
+                                return newUsers;
+                            }
+                        });
+                    }
                 }
             }    
             socket.on("receive-msg",function(data){
-                console.log(data);
                 update(data);
             });
         }
-    },[]);
+    },[currUser,em]);
 
     useEffect(()=>{
         if(socket){
