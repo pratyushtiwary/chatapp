@@ -97,6 +97,10 @@ export default function Index(){
                     setUsers(null);
                 }
             })
+            socket.on("load-initial-chat",function(data){
+                console.log(data);
+                setMsgs(data.chats);
+            });
             if(em){
                 socket.emit("fetch-chats",{
                     email: em,
@@ -201,9 +205,6 @@ export default function Index(){
             }    
             socket.on("receive-msg",function(data){
                 update(data);
-            });
-            socket.on("load-initial-chat",function(data){
-                setMsgs(data.chats);
             });
         }
     },[currUser,usersLoaded]);
