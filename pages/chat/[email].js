@@ -141,7 +141,7 @@ export default function Index(){
         }
 
         ()=>{
-            socket.destroy();
+            socket.close();
         }
     },[em]);
 
@@ -149,7 +149,15 @@ export default function Index(){
         if(socket){
             function update(data){
                 if(currUser){
-                    if(currUser.email === data.from){
+                    if(TOKEN.email === data.from){
+                        let d = {
+                            msg: data.msg,
+                            on: data.on,
+                            byMe: true,
+                        };
+                        setMsgs((m)=>[...m,d]);
+                    }
+                    else if(currUser.email !== data.from){
                         let d = {
                             msg: data.msg,
                             on: data.on,
@@ -204,10 +212,11 @@ export default function Index(){
                 }
             }    
             socket.on("receive-msg",function(data){
+                console.log(data);
                 update(data);
             });
         }
-    },[currUser,usersLoaded]);
+    },[]);
 
     useEffect(()=>{
         if(socket){
