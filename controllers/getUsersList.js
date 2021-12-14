@@ -20,24 +20,20 @@ async function getUsersList(userId){
         sequelize.query(`
             SELECT
                 m.id,
-                m.sentBy,
-                m.sentTo,
-                m.message
+                m."sentBy",
+                m."sentTo",
+                m."message"
             FROM
                 messages m
             INNER JOIN(
-                SELECT MAX(id) id,
-                    messages.sentBy,
-                    messages.sentTo
-                FROM
-                    messages
-                WHERE
-                    sentTo = ${userId} OR sentBy = ${userId}
+                SELECT MAX(id) "id", "sentBy", "sentTo"
+                FROM messages 
+                WHERE "sentTo" = ${userId} OR "sentBy" = ${userId}
                 GROUP BY
-                    sentBy,
-                    sentTo
+                    "sentBy",
+                    "sentTo"
                 HAVING
-                    sentBy != ${userId} OR sentTo != ${userId}
+                    "sentBy" != ${userId} OR "sentTo" != ${userId}
             ) l
             ON
                 m.id = l.id
