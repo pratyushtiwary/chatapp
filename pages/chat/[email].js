@@ -97,10 +97,12 @@ export default function Index(){
                     setUsers(null);
                 }
             })
-            socket.emit("fetch-chats",{
-                email: em,
-                token: TOKEN.token
-            });
+            if(em){
+                socket.emit("fetch-chats",{
+                    email: em,
+                    token: TOKEN.token
+                });
+            }
             socket.on("user-blocked",function(data){
                 setUsers((u)=>{
                     let temp = search(u,data.blocked);
