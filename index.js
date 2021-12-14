@@ -3,7 +3,6 @@ const server = require('./server');
 const login  = require('./controllers/login');
 const register  = require('./controllers/register');
 const { viewToken, verifyToken } = require("./utils/auth");
-const test = require("./test");
 const getUsersList = require("./controllers/getUsersList");
 const fetchChats = require("./controllers/fetchChats");
 const sendMsg = require('./controllers/sendMsg');
@@ -22,24 +21,8 @@ db.sync()
       next();
     })
 
-    server.app.get("/",function(req,res){
-       res.sendFile("test.html",{
-          root: __dirname
-       });
-    });
-    server.app.get("/socket.io.min.js",function(req,res){
-      res.sendFile("socket.io.min.js",{
-         root: __dirname
-      });
-   })
-   server.app.get("/socket.io.min.js.map",function(req,res){
-      res.sendFile("socket.io.min.js.map",{
-         root: __dirname
-      });
-   })
     server.app.post("/login",login)
     server.app.post("/register",register)
-    server.app.post("/test",test)
      
     const clients = {};
     const onlineUsers = {};
