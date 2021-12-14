@@ -71,7 +71,7 @@ async function getUsersList(userId){
                             BlockedUsers.findOne({
                                 where: {
                                     blockedBy: userId,
-                                    BlockedUser: user.id
+                                    blockedUser: user.id
                                 }
                             })
                             .then((c)=>{
