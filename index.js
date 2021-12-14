@@ -10,7 +10,6 @@ const search = require('./controllers/search');
 const blockUser = require('./controllers/blockUser');
 const unblockUser = require('./controllers/unblockUser');
 
-
 db.sync()
 .then(function(){
     console.log("DB Synced");
