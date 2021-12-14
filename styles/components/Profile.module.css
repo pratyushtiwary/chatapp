@@ -1,0 +1,77 @@
+.profileContainer { 
+    z-index: 5;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.profileContainer .overlay { 
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1;
+    backdrop-filter: blur(5px);
+}
+
+.profileContainer .profile {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 350px;
+    background-color: #FFFFFF;
+    z-index: 2;
+}
+
+.profileContainer .profile .profileHeader {
+    position: relative;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E5E5E5;
+    display: grid;
+    grid-template-columns: 50px auto;
+    margin-left: 5px;
+    padding: 10px 0;
+}
+
+.profileContainer .profile .profileHeader .title {
+    margin-left: 10px;
+}
+
+.profileContainer .profile .profileData {
+    overflow: auto;
+}
+
+.profileContainer .profile .profileData .profileAvatar {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #2FD524;
+    border-radius: 50%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 10px 0;
+    overflow: auto;
+}
+
+.profileContainer .profile .profileData .username,
+.profileContainer .profile .profileData .email {
+    text-align: center;
+}
+
+.btn {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 5px !important;
+}
+
+.icon {
+    margin-right: 5px;
+}
+
+@media screen and (max-width: 450px) {
+    .profileContainer .profile {
+        width: 100%;
+    }
+}

@@ -1,0 +1,14 @@
+.divider hr {
+    border: none;
+    height: 1px;
+    color: #18F0C9;
+    background-color: #18F0C9;
+}
+
+.divider.verticalHR {
+    height: 100%;
+    width: 1px;
+    color: #18F0C9;
+    background-color: #18F0C9;
+    margin: 0px 5px;
+}

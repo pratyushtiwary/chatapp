@@ -1,0 +1,41 @@
+.userCard {
+    margin: 10px 0px 10px 5px;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    width: 95%;
+}
+
+.userCard .avatar {
+    position: relative;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    border: 2.5px solid #2FD524;
+    overflow: hidden;
+    background-color: #FFFFFF;
+}
+
+.userCard .details {
+    margin-left: 15px;
+    overflow: hidden;
+}
+
+.userCard .details .name {
+    color: #FFFFFF;
+    width: 95%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+
+.userCard .details .recentMessage {
+    color: #E7D28B;
+    width: 95%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

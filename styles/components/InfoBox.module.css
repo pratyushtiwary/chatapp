@@ -1,0 +1,66 @@
+.infoBox{
+    margin-bottom: 5px;
+    display: grid;
+    grid-template-columns: 75px auto;
+    align-items: center;
+    padding: 7.5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.infoBox .avatar {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-left: 20px;
+}
+
+.infoBox .block {
+    margin-left: 10px;
+    height: 100%;
+}
+
+.infoBox .block .name {
+    color: #FFFFFF;
+}
+
+.infoBox .block .status {
+    color: #2FD524;
+}
+
+.infoBox .backBtn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.infoBox .backBtn .backIcon{
+    color: #FFFFFF;
+}
+
+@media screen and (max-width: 679px) {
+    .infoBox {
+        grid-template-columns: 100px auto;
+    }
+    
+    .infoBox .avatar {
+        display: grid;
+        grid-template-columns: 0.25fr auto;
+        width: 100%;
+        border-radius: 0px;
+        align-items: center;
+        justify-content: center;
+        margin-left: 0px;
+    }
+
+    .infoBox .avatar .img {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+}

@@ -1,0 +1,48 @@
+.chatBubble {
+    position: relative;
+    display: block;
+    text-align: right;
+    margin: 5px 5px 5px 0;
+    width: fit-content;
+    float: right;
+    clear: both;
+    width: fit-content;
+}
+
+.chatBubble.byMe {
+    float: left;
+    text-align: left;
+}
+
+.chatBubble .content{
+    padding: 10px;
+    border-radius: 5px;
+    width: fit-content;
+    float: right;
+    clear: both;
+    background-color: #FFFFFF;
+    z-index: 2;
+}
+
+.chatBubble.byMe .content {
+    float: left;
+    clear: both;
+    background-color: #2FD524;
+}
+
+.chatBubble .on {
+    color: #FFFFFF;
+}
+
+.chatBubble.byMe .on {
+    display: block;
+    margin-left: 2.5px;
+    width: 100%;
+    text-align: left;
+}
+
+.chatBubble .container {
+    color: #FFFFFF;
+    clear: both;
+    z-index: 1;
+}
