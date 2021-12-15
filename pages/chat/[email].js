@@ -2,377 +2,213 @@ import Head from "next/head";
 import { APPNAME } from "../../globals";
 import styles from "../../styles/chat.module.css";
 import { useMediaQuery } from "@material-ui/core";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Chat from "../../components/Chat";
 import SideBar from "../../components/SideBar";
 import { motion, AnimatePresence } from "framer-motion";
 import useStorage from "../../components/useStorage";
 import { verify_token, decrypt } from "../../components/crypto";
+import { search, unique } from "../../components/helper";
+import SocketContext, {socket} from "../../components/Socket";
 import { useRouter } from "next/router";
 const io = require("socket.io-client");
-let socket;
-const URL = "https://chatappbackend123.herokuapp.com";
+const URL = "http://localhost:5000";
 
 let TOKEN;
-let unique = function(arr,newData){
-    let newArr = arr.map((e)=>{
-        if(e.id === newData.id){
-            return newData;
-        }
-        else{
-            return e;
-        }
-    });
-    return newArr;
-}
-let search = function(arr,email){
-    let temp = {};
-    for(let i=0;i<arr.length;i++){
-        if(arr[i].email===email){
-            temp = arr[i];
-            break;
-        }
-    }
-    return temp;
-}
-export default function Index(){
-    const em = useRouter().query.email;
-    const [users, setUsers] = useState([]);
-    const chatElem = useRef(null);
-    const [isChatVisible,setChatVisible] = useState(false);
+
+export default function Email(props){
     const maxWidth = useMediaQuery("(max-width: 679px)");
     const [currUser, setCurrUser] = useState(null);
     const storage = useStorage();
     const [visible,setVisible] = useState(false);
+    const [isChatVisible,setChatVisible] = useState(false);
+    const [socket,setSocket] = useState();
+    const [users,setUsers] = useState([]);
     const [msgs,setMsgs] = useState([]);
-    const [usersLoaded,setUsersLoaded] = useState(false);
+    const {email} = useRouter().query;
 
     useEffect(()=>{
-
-        const token = storage.get("token");
-        if(token===null){
-            window.location.href="/login";
-        }
-        else if(verify_token(token)===false){
-            window.location.href="/login";
+        let mySocket;
+        let temp_token = storage.get("token");
+        if(!verify_token(temp_token)){
+            window.location.href = "/login";
         }
         else{
-            TOKEN = JSON.parse(decrypt(token));
-            setVisible(true);
-            socket = io(URL,{
+            TOKEN = JSON.parse(decrypt(temp_token));
+            mySocket = io(URL,{
                 transports: ["websocket"],
                 query: {
-                    token: TOKEN.token,
                     email: TOKEN.email
                 }
             });
-            window.socket = socket;
-            socket.on("connect",function(){
-                socket.emit("join",{
+
+            function join(){
+                mySocket.emit("join",{
                     token: TOKEN.token
-                });
-            })
-            socket.on("illegal-access",function(){
-                socket.destroy();
+                })
+            }
+
+            function listUsers({users}){
+                let temp = search(users,email,"email");
+                if(temp){
+                    setCurrUser(temp);
+                    setChatVisible(true);
+                }
+                setUsers(users);
+            }
+
+            function listSingleUser({user}){
+                setUsers([user]);
+            }
+
+
+            function logout(){
                 storage.remove("token");
-                setVisible(false);
-                window.location.href = "/login";
-            });
-            socket.on("user-connected",function(data){
-                setUsers([...data.users]);
-                setCurrUser(()=>{
-                    let c = search(data.users,em);
+                window.location.href = "/";
+            }
+            
+            const changeOnlineStatus = (online) => ({email}) => {
+                setUsers((oldUsers)=>{
+                    let temp = search(oldUsers,email,"email");
+                    if(temp){
+                        temp.isOnline = online;
+                        let newUsers = unique(oldUsers,temp,"email");
+                        return newUsers;
+                    }
+                    return oldUsers;
+                });
+                setCurrUser((cu)=>{
+                    if(cu){
+                        if(cu.email === email){
+                            let temp = cu;
+                            temp.isOnline = true;
+                            return temp;
+                        }
+                    }
+                    return cu;
+                })
+            }
+
+            function appendMsg(msg){
+                setMsgs((o)=>[...o,msg]);
+                setCurrUser((c)=>{
+                    if(c){
+                        let temp = c;
+                        if(
+                            c.email === msg.to ||
+                            c.email === msg.from
+                        ){
+                            temp.isOnline = true;
+                            return temp;
+                        }
+                    }
                     return c;
                 });
-                setChatVisible(true);
-                
-                setUsersLoaded(true);
-            });
-
-            socket.on("result",function({user}){
-                if(user){
-                    setUsers([user]);
-                }
-                else{
-                    setUsers(null);
-                }
-            })
-            socket.on("load-initial-chat",function(data){
-                setMsgs(data.chats);
-            });
-            if(em){
-                socket.emit("fetch-chats",{
-                    email: em,
-                    token: TOKEN.token
-                });
-            }
-            socket.on("user-blocked",function(data){
-                setUsers((u)=>{
-                    let temp = search(u,data.blocked);
-                    temp.isBlocked = true;
-                    const final = unique(u,temp);
-                    return [...final]
-                });
-                setCurrUser((u)=>{
-                    if(u.email === data.blocked){
-                        let temp = u;
-                        temp.isBlocked = true;
-                        return temp;
-                    }
-                })
-            })
-
-            socket.on("user-unblocked",function(data){
-                setUsers((u)=>{
-                    let temp = search(u,data.blocked);
-                    temp.isBlocked = false;
-                    const final = unique(u,temp);
-                    return [...final]
-                });
-                setCurrUser((u)=>{
-                    if(u.email === data.blocked){
-                        let temp = u;
-                        temp.isBlocked = false;
-                        return temp;
-                    }
-                })
-            })
-        }
-
-        ()=>{
-            socket.close();
-        }
-    },[em]);
-
-    useEffect(()=>{
-        if(socket){
-            function update(data){
-                if(currUser){
-                    if(currUser.email === data.from){
-                        let d = {
-                            msg: data.msg,
-                            on: data.on,
-                            byMe: false,
-                        };
-                        setMsgs((m)=>[...m,d]);
-                    }
-                    else if(data.byMe){
-                        let d = {
-                            msg: data.msg,
-                            on: data.on,
-                            byMe: true,
-                        };
-                        setMsgs((m)=>[...m,d]);
+                setUsers((oldUsers)=>{
+                    let temp = search(oldUsers,msg.from,"email");
+                    let newUsers;
+                    if(temp){
+                        temp.recentMessage = msg.msg;
+                        newUsers = unique(oldUsers,temp,"email");
+                        return newUsers;
                     }
                     else{
-                        setUsers((u)=>{
-                            let d = data;
-                            d.id = u.length;
-                            d.recentMessage = data.msg;
-                            d.avatar = d.name+".svg";
-                            d.email = d.from;
-                            let oldUsers = u;
-                            let newUsers = []
-                            if(oldUsers.length!==2){
-                                newUsers = unique(oldUsers,data);
-                            }
-                            else{
-                                newUsers = [d];
-                            }
+                        temp = search(oldUsers,msg.to,"email");
+                        if(temp){
+                            temp.recentMessage = msg.msg;
+                            newUsers = unique(oldUsers,temp,"email");
                             return newUsers;
-                        });
+                        }
                     }
-                }
-                else{
-                    if(data.from !== TOKEN.email){
-                        setUsers((u)=>{
-                            let d = search(u,data.from);
-                            if(d!==-1){
-                                d.recentMessage = data.msg;
-                                let oldUsers = u;
-                                let newUsers = []
-                                if(oldUsers.length>1){
-                                    newUsers = unique(oldUsers,d);
-                                }
-                                else{
-                                    newUsers = [d];
-                                }
-                                return newUsers;
-                            }
-                            else{
-                                let temp = data;
-                                data.email = data.to;
-                                data.name = data.name;
-                                data.avatar = data.name+".svg";
-                                data.recentMessage = data.msg;
-                                let newUsers = [...u,temp];
-                                return newUsers;
-                            }
-                        });
-                    }
-                    else{
-                        setUsers((u)=>{
-                            let d = search(u,data.to);
-                            if(d!==-1){
-                                d.recentMessage = data.msg;
-                                let oldUsers = u;
-                                let newUsers = []
-                                if(oldUsers.length>1){
-                                    newUsers = unique(oldUsers,d);
-                                }
-                                else{
-                                    newUsers = [d];
-                                }
-                                return newUsers;
-                            }
-                            else{
-                                let temp = data;
-                                data.email = data.to;
-                                data.name = data.name;
-                                data.avatar = data.name+".svg";
-                                data.recentMessage = data.msg;
-                                let newUsers = [...u,temp];
-                                return newUsers;
-                            }
-                        });
-                    }
-                }
-            }    
-            socket.on("receive-msg",function(data){
-                update(data);
-            });
-        }
-    },[currUser,em]);
-
-    useEffect(()=>{
-        if(socket){
-            socket.on("user-online", function(data){
-                setUsers((u)=>{
-                    let user = search(u,data.email);
-                    user.isOnline = true;
-                    let allUsers = u;
-                    allUsers = unique(allUsers,user);
-                    return allUsers;
-                });
-            });
-            socket.on("user-offline", function(data){
-                setUsers((u)=>{
-                    let user = search(u,data.email);
-                    user.isOnline = false;
-                    let allUsers = u;
-                    allUsers = unique(allUsers,user);
-                    return allUsers;
-                });
-            })
-        }
-    },[socket]);
-
-    useEffect(()=>{
-        let chat = chatElem.current;
-        if(chat){
-            let k = setTimeout(()=>{
-                chat.scrollTo(0,chat.scrollHeight);
-                clearTimeout(k);
-            },500);
-        }
-    },[msgs,currUser]);
-
-    useEffect(()=>{
-        const listener = window.addEventListener("popstate",(event)=>{
-            if(event.state.index!==undefined){
-                setCurrUser(users[event.state.index]);
-                setChatVisible(true);
+                })
             }
-            else{
-                setChatVisible(false);
+
+            mySocket.on("connect",join);
+            mySocket.on("illegal-access",logout);
+            mySocket.on("user-connected",listUsers);
+            mySocket.on("user-online",changeOnlineStatus(true));
+            mySocket.on("user-offline",changeOnlineStatus(false));
+            mySocket.on("receive-msg",appendMsg);
+            mySocket.on("result",listSingleUser);
+    
+            window.socket = socket;
+            
+            setSocket(mySocket);
+            setVisible(true);
+        }
+        return ()=>{
+            if(mySocket){
+                mySocket.off("connect",join);
+                mySocket.off("illegal-access",logout);
+                mySocket.off("user-connected",listUsers);
+                mySocket.off("user-online",changeOnlineStatus(true));
+                mySocket.off("user-offline",changeOnlineStatus(false));  
+                mySocket.off("receive-msg",appendMsg);
+                mySocket.off("result",listSingleUser);
+                mySocket.close();
             }
-        })
-
-        return () => {
-            window.removeEventListener("popstate", listener);
         }
+    },[props,email]);
 
-    },[users,usersLoaded]);
-
-    function sendMsg(msg){
-        const elem = chatElem.current;
-        let newMsg = {};
-        const date = new Date();
-        const hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-        const minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-        let finalTime = date.getUTCDate() + "-" + (date.getUTCMonth() + 1) + "-" + date.getFullYear() + " " + hours + ":"+minutes 
-        let newData = currUser;
-        newData.recentMessage = msg;
-        let newUsers = unique(users,newData)
-        newMsg = {
-            msg: msg,
-            on: finalTime,
-            byMe: true
-        }
-        setMsgs((oldMsgs)=>[...oldMsgs,newMsg]);
-        setUsers(newUsers);
-        socket.emit("send-msg",{
-            to: currUser.email,
-            from: TOKEN.email,
-            msg: msg,
-            token: TOKEN.token
-        })
-        if(elem){
-            let k = setTimeout(()=>{
-                elem.scrollTo(0,elem.scrollHeight);
-                clearTimeout(k);
-            },500);
-        }
+    function goBack(){
+        window.history.pushState(null,null,"/");
+        setChatVisible(false);
+        setMsgs([]);
     }
 
-    function searchUser(term){
+    function blockUser(user){
+        setCurrUser(()=>{
+            let temp = user;
+            temp.isBlocked = true;
+            return temp;
+        });
+        setUsers((oldUsers)=>{
+            let temp = user;
+            temp.isBlocked = true;
+            let newUsers = unique(oldUsers,temp,"email");
+            return newUsers
+        })
+    }
+
+    function unblockUser(user){
+        setCurrUser(()=>{
+            let temp = user;
+            temp.isBlocked = false;
+            return temp;
+        });
+        setUsers((oldUsers)=>{
+            let temp = user;
+            temp.isBlocked = false;
+            let newUsers = unique(oldUsers,temp,"email");
+            return newUsers
+        })
+    }
+
+    function changeCurrUser(index){
+        setCurrUser(users[index]);
+        setChatVisible(true);
+    }
+
+    function loadInitialChats(msgs){
+        setMsgs(msgs);
+    }
+
+    function updateMsg(msg){
+        setMsgs((o)=>[...o,msg]);
+    }
+
+    function Search(term){
         socket.emit("search",{
             term: term,
             token: TOKEN.token
-        });
+        })
     }
-
+    
     function resetSearch(){
         socket.emit("resetSearch",{
             token: TOKEN.token
         });
     }
-
-    function changeChat(index){
-        setCurrUser(users[index]);
-        setMsgs((oldMsgs)=>[...oldMsgs]);
-        if(socket){
-            socket.emit("fetch-chats",{
-                email: users[index].email,
-                token: TOKEN.token
-            });
-        }
-        setChatVisible(true);
-    }
-
-    function goBack(){
-        window.history.pushState(null,null,"/");
-        setChatVisible(false);
-    }
-
-    function blockUser(){
-        if(currUser && socket){
-            socket.emit("blockUser",{
-                token: TOKEN.token,
-                to: currUser.email
-            });
-        }
-    }
-
-    function unblockUser(){
-        if(currUser && socket){
-            socket.emit("unblockUser",{
-                token: TOKEN.token,
-                to: currUser.email
-            });
-        }
-    }
-
 
     return (
         <>
@@ -381,63 +217,72 @@ export default function Index(){
             </Head>
             {
                 visible && (
-                    <div className={styles.cont}>
-                        <div className={styles.main}>
-                            <AnimatePresence>
-                                {
-                                    isChatVisible && maxWidth && (
-                                        <motion.div>
-                                            <Chat
-                                                msgs = {msgs}
-                                                user = {currUser}
-                                                onSend = {sendMsg}
-                                                mobile={true}
-                                                onBack={goBack}
-                                                chatElemRef={chatElem}
-                                                onBlock={blockUser}
-                                                onUnBlock={unblockUser}
-                                            />
-                                        </motion.div>
-                                    )
-                                }
-                                {
-                                    !isChatVisible && maxWidth && (
-                                        <motion.div>
+                    <SocketContext.Provider value={socket}>
+                        <div className={styles.cont}>
+                            <div className={styles.main}>
+                                <AnimatePresence>
+                                    {
+                                        isChatVisible && maxWidth && (
+                                            <motion.div>
+                                                <Chat
+                                                    user = {currUser}
+                                                    mobile={true}
+                                                    onBack={goBack}
+                                                    key={1}
+                                                    token={TOKEN}
+                                                    msgs={msgs}
+                                                    onSendMsg={updateMsg}
+                                                    initialChatLoad={loadInitialChats}
+                                                    blockUser={blockUser}
+                                                    unblockUser={unblockUser}
+                                                />
+                                            </motion.div>
+                                        )
+                                    }
+                                    {
+                                        maxWidth && (
+                                            <motion.div>
+                                                <SideBar
+                                                    users={users}
+                                                    key={2}
+                                                    hide={isChatVisible}
+                                                    onUserCardClick={changeCurrUser}
+                                                    onSearch={Search}
+                                                    onReset={resetSearch}
+                                                />
+                                            </motion.div>
+                                        )
+                                    }
+                                    {
+                                        !maxWidth && (
                                             <SideBar
                                                 users={users}
-                                                onUserCardClick = {changeChat}
-                                                onSearch={searchUser}
+                                                onUserCardClick={changeCurrUser}
+                                                key={3}
+                                                onSearch={Search}
                                                 onReset={resetSearch}
                                             />
-                                        </motion.div>
-                                    )
-                                }
-                                {
-                                    !maxWidth && (
-                                        <SideBar
-                                            users={users}
-                                            onUserCardClick = {changeChat}
-                                            onSearch={searchUser}
-                                            onReset={resetSearch}
-                                        />
-                                    )
-                                }
-                                {
-                                    isChatVisible && !maxWidth && (
-                                        <Chat
-                                            msgs = {msgs}
-                                            user = {currUser}
-                                            onSend = {sendMsg}
-                                            chatElemRef={chatElem}
-                                            onBlock={blockUser}
-                                            onUnBlock={unblockUser}
-                                        />
-                                    )
-                                }
-                            </AnimatePresence>
-                            
+                                        )
+                                    }
+                                    {
+                                        isChatVisible && !maxWidth && (
+                                            <Chat
+                                                user = {currUser}
+                                                key={4}
+                                                token={TOKEN}
+                                                initialChatLoad={loadInitialChats}
+                                                msgs={msgs}
+                                                onSendMsg={updateMsg}
+                                                blockUser={blockUser}
+                                                unblockUser={unblockUser}
+                                            />
+                                        )
+                                    }
+                                </AnimatePresence>
+                                
+                            </div>
                         </div>
-                    </div>
+                    </SocketContext.Provider>
                 )
             }
             

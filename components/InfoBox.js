@@ -1,7 +1,7 @@
 import styles from "../styles/components/InfoBox.module.css";
 import Image from "next/image";
 import { Typography, IconButton, Icon } from "@material-ui/core";
-import { useState } from "react";
+import { useEffect } from "react";
 
 const { motion, AnimatePresence } = require("framer-motion");
 

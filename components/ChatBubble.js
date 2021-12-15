@@ -22,14 +22,14 @@ export default function CharBubble({msg, byMe, on, index}){
         <motion.div 
             className={styles.chatBubble+" "+(byMe&&styles.byMe)}
             initial = {{
-                y: byMe?400:200,
+                y: byMe?25:25,
             }}
             animate = {{
-                y: 0,
-                transition: {
-                    duration: 0.5,
-                    ease: "easeOut"
-                }
+                y: 0
+            }}
+            transition={{
+                duration: 0.25,
+                stiffness: 20
             }}
             key={index}
             whileHover = {updateShow(true)}
