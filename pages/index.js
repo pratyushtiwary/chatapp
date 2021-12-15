@@ -11,7 +11,7 @@ import { verify_token, decrypt } from "../components/crypto";
 import { search, unique } from "../components/helper";
 import SocketContext, {socket} from "../components/Socket";
 const io = require("socket.io-client");
-const URL = "http://localhost:5000";
+const URL = "https://chatappbackend123.herokuapp.com";
 
 let TOKEN;
 

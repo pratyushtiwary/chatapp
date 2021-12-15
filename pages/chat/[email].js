@@ -12,7 +12,7 @@ import { search, unique } from "../../components/helper";
 import SocketContext, {socket} from "../../components/Socket";
 import { useRouter } from "next/router";
 const io = require("socket.io-client");
-const URL = "http://localhost:5000";
+const URL = "https://chatappbackend123.herokuapp.com";
 
 let TOKEN;
 

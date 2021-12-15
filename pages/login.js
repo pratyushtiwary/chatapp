@@ -13,7 +13,7 @@ import Link from "next/link";
 import Loader from "../components/Loader";
 
 export default function Login(props){
-  const hit = useHit("http://localhost:5000");
+  const hit = useHit("https://chatappbackend123.herokuapp.com");
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
   const [error,setError] = useState(null);
