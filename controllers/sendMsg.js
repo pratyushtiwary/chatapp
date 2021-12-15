@@ -58,28 +58,31 @@ function sendMsg(token, to, msg, clients, socket, onlineUsers, from){
                         forwardedFrom: null,
                         read: false
                     }).then((c)=>{
+                        console.log(clients);
                         if(clients[to]) {
                             clients[to].forEach(function(id) {
-                                socket.broadcast.to(id).emit("receive-msg", {
-                                msg,
-                                on: finalTime,
-                                from: from,
-                                to: to,
-                                name: token.username
-                                });
+                                if(id !== socket.id){
+                                    socket.broadcast.to(id).emit("receive-msg", {
+                                        msg,
+                                        on: finalTime,
+                                        from: from,
+                                        to: to,
+                                        name: token.username
+                                    });
+                                }
                             });
                         }
                         if(clients[from]){
                             clients[from].forEach(function(id) {
                                 if(id != socket.id) {
-                                socket.broadcast.to(id).emit("receive-msg", {
-                                    msg,
-                                    on: finalTime,
-                                    byMe: true,
-                                    from: from,
-                                    to: to,
-                                    name: token.username
-                                });
+                                    socket.broadcast.to(id).emit("receive-msg", {
+                                        msg,
+                                        on: finalTime,
+                                        byMe: true,
+                                        from: from,
+                                        to: to,
+                                        name: token.username
+                                    });
                                 }
                             });
                         }

@@ -45,7 +45,6 @@ async function getUsersList(userId){
         })
         .then((msgs)=>{
             if(msgs){
-                console.log(msgs);
                 msgs.forEach((e,i)=>{
                    allUsers.add([e.sentBy,e.sentTo,e.id,e.message]) 
                 })

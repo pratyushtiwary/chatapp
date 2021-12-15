@@ -35,6 +35,8 @@ db.sync()
             let {id, email} = viewToken(data.token);
             if(clients[email]) {
                clients[email].push(socket.id);
+               clients[email] = new Set(clients[email]);
+               clients[email] = new Array(...clients[email]);
             }
             else{
                clients[email] = [socket.id];
