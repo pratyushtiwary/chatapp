@@ -37,7 +37,8 @@ export default function Index(props){
                 transports: ["websocket"],
                 query: {
                     email: TOKEN.email
-                }
+                },
+                ssl: true
             });
 
             function join(){

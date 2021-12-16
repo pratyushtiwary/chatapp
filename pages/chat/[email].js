@@ -39,7 +39,8 @@ export default function Email(props){
                 transports: ["websocket"],
                 query: {
                     email: TOKEN.email
-                }
+                },
+                ssl: true
             });
 
             function join(){
