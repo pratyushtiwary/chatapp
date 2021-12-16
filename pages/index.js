@@ -280,41 +280,26 @@ export default function Index(props) {
                   />
                 )}
                 {!isChatVisible && users[0] !== undefined && !maxWidth && (
-                  <motion.div
-                    className={styles.chatInfo}
-                    initial={{ height: 0 }}
-                    animate={{ height: "auto" }}
-                    exit={{ height: 0 }}
-                    key={5}
-                  >
+                  <div className={styles.chatInfo} key={5}>
                     <div className={styles.infoCont}>
                       <div className={styles.infoImg}></div>
                       <Typography variant="h5" className={styles.infoTxt}>
                         ◀️ Select a user from left to start chatting
                       </Typography>
                     </div>
-                  </motion.div>
+                  </div>
                 )}
                 {isChatVisible && !maxWidth && (
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: "auto" }}
-                    exit={{ height: 0 }}
-                    transition={{
-                      delay: 10
-                    }}
-                  >
-                    <Chat
-                      user={currUser}
-                      key={4}
-                      token={TOKEN}
-                      initialChatLoad={loadInitialChats}
-                      msgs={msgs}
-                      onSendMsg={updateMsg}
-                      blockUser={blockUser}
-                      unblockUser={unblockUser}
-                    />
-                  </motion.div>
+                  <Chat
+                    user={currUser}
+                    key={4}
+                    token={TOKEN}
+                    initialChatLoad={loadInitialChats}
+                    msgs={msgs}
+                    onSendMsg={updateMsg}
+                    blockUser={blockUser}
+                    unblockUser={unblockUser}
+                  />
                 )}
               </AnimatePresence>
             </div>
