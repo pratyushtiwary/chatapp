@@ -11,7 +11,7 @@ import { verify_token, decrypt } from "../components/crypto";
 import { search, unique } from "../components/helper";
 import MainLoader from "../components/MainLoader";
 import ConnectError from "../components/ConnectError";
-import SocketContext, { socket } from "../components/Socket";
+import SocketContext from "../components/Socket";
 const io = require("socket.io-client");
 const URL = "https://chatappbackend123.herokuapp.com";
 
@@ -60,10 +60,9 @@ export default function Index(props) {
       }
 
       function listSingleUser({ user }) {
-        if(user){
-          setUsers([user]);          
-        }
-        else{
+        if (user) {
+          setUsers([user]);
+        } else {
           setUsers([undefined]);
         }
       }
@@ -157,6 +156,24 @@ export default function Index(props) {
     };
   }, [props]);
 
+  useEffect(() => {
+    let listener = window.addEventListener("popstate", (event) => {
+      const { index } = event.state;
+      if (index !== undefined) {
+        if (users.length > 0) {
+          setCurrUser(users[index]);
+          setChatVisible(true);
+        }
+      } else {
+        setChatVisible(false);
+      }
+    });
+
+    return () => {
+      window.removeEventListener("popstate", listener);
+    };
+  }, [users]);
+
   function goBack() {
     window.history.pushState(null, null, "/");
     setChatVisible(false);
@@ -230,32 +247,28 @@ export default function Index(props) {
             <div className={styles.main}>
               <AnimatePresence>
                 {isChatVisible && maxWidth && (
-                  <motion.div>
-                    <Chat
-                      user={currUser}
-                      mobile={true}
-                      onBack={goBack}
-                      key={1}
-                      token={TOKEN}
-                      msgs={msgs}
-                      onSendMsg={updateMsg}
-                      initialChatLoad={loadInitialChats}
-                      blockUser={blockUser}
-                      unblockUser={unblockUser}
-                    />
-                  </motion.div>
+                  <Chat
+                    user={currUser}
+                    mobile={true}
+                    onBack={goBack}
+                    key={1}
+                    token={TOKEN}
+                    msgs={msgs}
+                    onSendMsg={updateMsg}
+                    initialChatLoad={loadInitialChats}
+                    blockUser={blockUser}
+                    unblockUser={unblockUser}
+                  />
                 )}
                 {maxWidth && (
-                  <motion.div>
-                    <SideBar
-                      users={users}
-                      key={2}
-                      hide={isChatVisible}
-                      onUserCardClick={changeCurrUser}
-                      onSearch={Search}
-                      onReset={resetSearch}
-                    />
-                  </motion.div>
+                  <SideBar
+                    users={users}
+                    key={2}
+                    hide={isChatVisible}
+                    onUserCardClick={changeCurrUser}
+                    onSearch={Search}
+                    onReset={resetSearch}
+                  />
                 )}
                 {!maxWidth && (
                   <SideBar
@@ -266,27 +279,42 @@ export default function Index(props) {
                     onReset={resetSearch}
                   />
                 )}
-                {!isChatVisible && users[0]!==undefined && !maxWidth && (
-                  <div className={styles.chatInfo}>
+                {!isChatVisible && users[0] !== undefined && !maxWidth && (
+                  <motion.div
+                    className={styles.chatInfo}
+                    initial={{ height: 0 }}
+                    animate={{ height: "auto" }}
+                    exit={{ height: 0 }}
+                    key={5}
+                  >
                     <div className={styles.infoCont}>
                       <div className={styles.infoImg}></div>
                       <Typography variant="h5" className={styles.infoTxt}>
                         ◀️ Select a user from left to start chatting
                       </Typography>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
                 {isChatVisible && !maxWidth && (
-                  <Chat
-                    user={currUser}
-                    key={4}
-                    token={TOKEN}
-                    initialChatLoad={loadInitialChats}
-                    msgs={msgs}
-                    onSendMsg={updateMsg}
-                    blockUser={blockUser}
-                    unblockUser={unblockUser}
-                  />
+                  <motion.div
+                    initial={{ height: 0 }}
+                    animate={{ height: "auto" }}
+                    exit={{ height: 0 }}
+                    transition={{
+                      delay: 10
+                    }}
+                  >
+                    <Chat
+                      user={currUser}
+                      key={4}
+                      token={TOKEN}
+                      initialChatLoad={loadInitialChats}
+                      msgs={msgs}
+                      onSendMsg={updateMsg}
+                      blockUser={blockUser}
+                      unblockUser={unblockUser}
+                    />
+                  </motion.div>
                 )}
               </AnimatePresence>
             </div>
