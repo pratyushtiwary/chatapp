@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }) {
       }),
     [prefersDarkMode]
   );
-  if (process.env.Maintenance) {
+  if (process.env.Maintenance || process.env.MAINTENANCE) {
     return <Maintenance />;
   }
 
