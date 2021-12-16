@@ -1,13 +1,16 @@
 const { Sequelize } = require('sequelize');
 
-const db = new Sequelize("postgres://pskcszopqtsrot:57ccc506eb6568458b71e6a47c0d8095893baca69dda222c0f9b62ff5d42e8fd@ec2-176-34-105-15.eu-west-1.compute.amazonaws.com:5432/d51crngfdp14kr",{
-    dialect: 'postgres',
+const db = new Sequelize(
+  "postgres://bwkwbhskdgaylo:2192e42a3c0e879dd70b295cf72f763eb1a5fa7f8b822f11d4afe4cbdc577050@ec2-52-31-201-170.eu-west-1.compute.amazonaws.com:5432/dhmu7s2sko2fd",
+  {
+    dialect: "postgres",
     dialectOptions: {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false
-        }
-    }
-});
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
+  }
+);
 
 module.exports = db;
