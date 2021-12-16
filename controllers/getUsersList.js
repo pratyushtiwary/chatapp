@@ -4,6 +4,7 @@ const BlockedUsers = require('../models/BlockedUsers');
 const Sequelize = require('sequelize');
 const sequelize = require('../db');
 const Unique = require("../utils/Unique");
+const { decrypt } = require("../utils/cipher");
 
 async function getUsersList(userId){
     return await new Promise((res,rej)=>{
@@ -64,7 +65,7 @@ async function getUsersList(userId){
                                 name: user.username,
                                 email: user.email,
                                 avatar: user.username+".svg",
-                                recentMessage: users[i][3]
+                                recentMessage: decrypt(users[i][3])
                             }
 
                             BlockedUsers.findOne({
