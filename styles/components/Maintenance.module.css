@@ -1,0 +1,16 @@
+.cont {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background: #FFFFFF;
+    padding: 10px;
+    border-radius: 5px;
+    width: 95vw;
+    max-width: 350px;
+}
+
+.cont .txt {
+    width: 100%;
+    text-align: center;
+}
