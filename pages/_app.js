@@ -1,6 +1,5 @@
 import "../styles/globals.css";
 import React from "react";
-import Head from "next/head";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -25,9 +24,6 @@ function MyApp({ Component, pageProps }) {
       }),
     [prefersDarkMode]
   );
-  if (process.env.Maintenance || process.env.MAINTENANCE) {
-    return <Maintenance />;
-  }
 
   return (
     <>
