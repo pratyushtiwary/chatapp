@@ -28,3 +28,9 @@
     text-align: center;
     margin-top: 5px;
 }
+
+.credits {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}

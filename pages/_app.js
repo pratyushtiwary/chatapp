@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }) {
 	  	<>
 		  	<ThemeProvider theme={theme}>
 				<CssBaseline/>
-				<Component {...pageProps} appName="CharLando"/>
+				<Component {...pageProps} appName="ChatApp"/>
 			</ThemeProvider>
 		</>
 	)
