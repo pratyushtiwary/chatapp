@@ -1,6 +1,7 @@
 const Messages = require("../models/Messages");
 const Users = require("../models/Users");
 const Sequelize = require("sequelize");
+const { decrypt } = require("../utils/cipher");
 
 function fetchChat(email, from_id, socket, clients, onlineUsers){
     Users.findOne({
@@ -36,13 +37,13 @@ function fetchChat(email, from_id, socket, clients, onlineUsers){
                   let finalTime = time.getUTCDate() + "-" + (time.getUTCMonth() + 1) + "-" + time.getFullYear() + " " + hours + ":"+minutes 
                   if(e.sentBy === from_id){
                      return {
-                        msg: e.message,
+                        msg: decrypt(e.message),
                         on: finalTime,
                         byMe: true
                      }
                   }
                   return {
-                     msg: e.message,
+                     msg: decrypt(e.message),
                      on: finalTime,
                      byMe: false
                   }
