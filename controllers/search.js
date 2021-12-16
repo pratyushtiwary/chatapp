@@ -2,6 +2,7 @@ const Users = require("../models/Users");
 const Messages = require("../models/Messages");
 const sequelize = require("sequelize");
 const { viewToken } = require("../utils/auth");
+const { decrypt } = require("../utils/cipher");
 
 function search(term,token,socket){
     const t = viewToken(token);
@@ -37,7 +38,7 @@ function search(term,token,socket){
                             name: user.username,
                             email: user.email,
                             avatar: user.username+".svg",
-                            recentMessage: msg.message
+                            recentMessage: decrypt(msg.message)
                         }
                         socket.emit("result",{
                             "user": final
