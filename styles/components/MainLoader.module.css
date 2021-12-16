@@ -1,0 +1,46 @@
+.mainLoader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fafafa;
+  z-index: 5;
+}
+
+.mainLoader .cont {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95vw;
+  max-width: 600px;
+}
+
+.mainLoader .loader {
+  width: 100%;
+  height: 100px;
+  background-image: url("/logo.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.mainLoader .txt {
+  margin-top: 10px;
+  animation: blink 1s linear infinite;
+  width: 100%;
+  text-align: center;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.25;
+  }
+}

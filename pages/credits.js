@@ -38,7 +38,7 @@ export default function Credits() {
         <center className={styles.link}>
           <Typography variant="h6">
             <a
-              href="https://www.linkedin.com/in/shruti-rawat2212"
+              href="https://github.com/Shruti-22-bliss"
               target="_blank"
               rel="noreferrer"
             >

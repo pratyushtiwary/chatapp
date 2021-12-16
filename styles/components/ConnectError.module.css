@@ -1,0 +1,35 @@
+.cont {
+    position: fixed;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fafafa;
+}
+
+.cont .main {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 95vw;
+    max-width: 600px;
+    transform: translate(-50%,-50%);
+}
+
+.cont .errorImg {
+    width: 150px;
+    height: 150px;
+    background-image: url("/error/connect_error.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    margin-bottom: 10px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.cont .errorTxt {
+    text-align: center;
+}
