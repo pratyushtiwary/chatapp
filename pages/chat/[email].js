@@ -128,6 +128,17 @@ export default function Email(props) {
               temp.recentMessage = msg.msg;
               newUsers = unique(oldUsers, temp, "email");
               return newUsers;
+            } else {
+              let usr = {
+                avatar: msg.name + ".svg",
+                email: msg.from,
+                id: 0,
+                isBlocked: false,
+                name: msg.name,
+                recentMessage: msg.msg,
+              };
+              newUsers = [usr, ...oldUsers];
+              return [...newUsers];
             }
           }
         });
