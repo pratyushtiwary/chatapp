@@ -68,7 +68,7 @@ export default function Chat({
       hours +
       ":" +
       minutes +
-      ":00Z";
+      ":00";
     if (userMsg !== "") {
       if (socket) {
         socket.emit("send-msg", {
