@@ -130,7 +130,7 @@ export default function Index(props) {
                 name: msg.name,
                 recentMessage: msg.msg,
               };
-              newUsers = [usr,...oldUsers];
+              newUsers = [usr, ...oldUsers];
               return [...newUsers];
             }
           }

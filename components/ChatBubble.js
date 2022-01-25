@@ -19,54 +19,56 @@ export default function CharBubble({msg, byMe, on, index}){
     },[show]);
 
     return (
-        <motion.div 
-            className={styles.chatBubble+" "+(byMe&&styles.byMe)}
-            initial = {{
-                y: byMe?25:25,
-            }}
-            animate = {{
-                y: 0
-            }}
-            transition={{
-                duration: 0.25,
-                stiffness: 20
-            }}
-            key={index}
-            whileHover = {updateShow(true)}
-            whileTap = {updateShow(true)}
-        >
-            <Typography variant="body1" className={styles.content}>{msg}</Typography>
-            <AnimatePresence>
-                {
-                    show && (
-                        <motion.div
-                            className={styles.container}
-                            initial = {{
-                                opacity: 0,
-                                y: "-100%"
-                            }}
-                            animate = {{
-                                opacity: 1,
-                                y: 0,
-                                transition: {
-                                    duration: 0.25,
-                                    ease: "easeIn"
-                                }
-                            }}
-                            exit = {{
-                                opacity: 0,
-                                y: "-100%",
-                                transition: {
-                                    duration: 0.25,
-                                    ease: "easeOut"
-                                }
-                            }}
-                        >
-                            <Typography variant="caption" className={styles.on}>{on}</Typography>
-                        </motion.div>
-                    )
-                }
-            </AnimatePresence>
-        </motion.div>
-    )
+      <motion.div
+        className={styles.chatBubble + " " + (byMe && styles.byMe)}
+        initial={{
+          y: byMe ? 25 : 25,
+        }}
+        animate={{
+          y: 0,
+        }}
+        transition={{
+          duration: 0.25,
+          stiffness: 20,
+        }}
+        key={index}
+        whileHover={updateShow(true)}
+        whileTap={updateShow(true)}
+      >
+        <Typography variant="body1" className={styles.content}>
+          {msg}
+        </Typography>
+        <AnimatePresence>
+          {show && (
+            <motion.div
+              className={styles.container}
+              initial={{
+                opacity: 0,
+                y: "-100%",
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: {
+                  duration: 0.25,
+                  ease: "easeIn",
+                },
+              }}
+              exit={{
+                opacity: 0,
+                y: "-100%",
+                transition: {
+                  duration: 0.25,
+                  ease: "easeOut",
+                },
+              }}
+            >
+              <Typography variant="caption" className={styles.on}>
+                {new Date(on).toLocaleString()}
+              </Typography>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    );
 }
