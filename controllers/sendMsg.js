@@ -5,20 +5,23 @@ const Sequelize = require("sequelize");
 const { encrypt } = require("../utils/cipher");
 
 function sendMsg(token, to, msg, clients, socket, onlineUsers, from) {
-  const date = new Date();
-  const hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+  const time = new Date();
+  const month =
+    time.getMonth() + 1 > 9 ? time.getMonth() + 1 : "0" + (time.getMonth() + 1);
+  const hours = time.getHours() > 9 ? time.getHours() : "0" + time.getHours();
   const minutes =
-    date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+    time.getMinutes() > 9 ? time.getMinutes() : "0" + time.getMinutes();
   let finalTime =
-    date.getUTCDate() +
+    time.getFullYear() +
     "-" +
-    (date.getUTCMonth() + 1) +
+    month +
     "-" +
-    date.getFullYear() +
-    " " +
+    time.getUTCDate() +
+    "T" +
     hours +
     ":" +
-    minutes;
+    minutes +
+    ":00Z";
   Users.findOne({
     attributes: ["id"],
     where: {
