@@ -56,6 +56,7 @@ export default function Chat({
 
   function sendMsg(e) {
     e.preventDefault();
+    setBeingSend(true);
     const time = new Date();
     const month =
       time.getMonth() + 1 > 9
