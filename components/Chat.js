@@ -3,7 +3,12 @@ import { useState, useEffect, useContext, useRef } from "react";
 import InfoBox from "./InfoBox";
 import ChatBubble from "./ChatBubble";
 import Divider from "./Divider";
-import { TextField, IconButton, Icon } from "@material-ui/core";
+import {
+  TextField,
+  IconButton,
+  Icon,
+  CircularProgress,
+} from "@material-ui/core";
 import Profile from "./Profile";
 import SocketContext from "./Socket";
 
@@ -23,6 +28,7 @@ export default function Chat({
   const socket = useContext(SocketContext);
   const chatElem = useRef(null);
   const [currUser, setCurrUser] = useState(null);
+  const [beingSend, setBeingSend] = useState(false);
 
   useEffect(() => {
     let cE = chatElem.current;
@@ -78,13 +84,21 @@ export default function Chat({
           token: token.token,
         });
       }
-      let temp = {
-        msg: userMsg,
-        on: finalTime,
-        byMe: true,
-      };
-      onSendMsg(temp);
-      setUserMsg("");
+
+      function genMsg({ sentimentScore }) {
+        let temp = {
+          msg: userMsg,
+          on: finalTime,
+          byMe: true,
+          sentimentScore: sentimentScore,
+        };
+        onSendMsg(temp);
+        setBeingSend(false);
+        setUserMsg("");
+        socket.off("msg-sentiment", genMsg);
+      }
+
+      socket.on("msg-sentiment", genMsg);
     }
   }
 
@@ -139,6 +153,7 @@ export default function Chat({
                 byMe={e.byMe}
                 key={i}
                 index={i}
+                sentimentScore={e.sentimentScore}
               />
             ))}
           </div>
@@ -150,14 +165,29 @@ export default function Chat({
               className={styles.msgInput}
               value={userMsg}
               onChange={(e) => setUserMsg(e.target.value)}
+              disabled={beingSend}
             />
-            <IconButton
-              type="submit"
-              aria-label="Send Message"
-              className={styles.sendMsg}
-            >
-              <Icon>send</Icon>
-            </IconButton>
+            <div className={styles.sendMsgSec}>
+              <IconButton
+                type="submit"
+                aria-label="Send Message"
+                className={
+                  styles.sendMsg + " " + (beingSend && styles.beingSend)
+                }
+                disabled={beingSend}
+              >
+                <Icon>send</Icon>
+              </IconButton>
+              {beingSend && (
+                <div className={styles.sendMsgProgress}>
+                  <CircularProgress
+                    size={50}
+                    color="primary"
+                    className={styles.progress}
+                  />
+                </div>
+              )}
+            </div>
           </form>
         </div>
       </div>
