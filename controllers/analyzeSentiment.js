@@ -12,7 +12,7 @@ function analyze(msg) {
         if (word != "") {
           if (bag_of_words[word.toLowerCase()] != undefined) {
             count += 1;
-            score += parseInt(bag_of_words[word]);
+            score += parseInt(bag_of_words[word.toLowerCase()]);
           }
         }
       });
