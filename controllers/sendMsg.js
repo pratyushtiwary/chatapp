@@ -3,6 +3,7 @@ const Users = require("../models/Users");
 const BlockedUsers = require("../models/BlockedUsers");
 const Sequelize = require("sequelize");
 const { encrypt } = require("../utils/cipher");
+const analyze = require("./analyzeSentiment");
 
 function sendMsg(token, to, msg, clients, socket, onlineUsers, from) {
   const time = new Date();
@@ -57,6 +58,7 @@ function sendMsg(token, to, msg, clients, socket, onlineUsers, from) {
       })
         .then((c) => {
           if (!c) {
+            const sentimentScore = analyze(msg)[1];
             Messages.create({
               id: null,
               message: encrypt(msg),
@@ -65,9 +67,9 @@ function sendMsg(token, to, msg, clients, socket, onlineUsers, from) {
               forwarded: false,
               forwardedFrom: null,
               read: false,
+              sentimentScore: sentimentScore,
             })
               .then((c) => {
-                console.log(clients);
                 if (clients[to]) {
                   clients[to].forEach(function (id) {
                     if (id !== socket.id) {
@@ -77,6 +79,7 @@ function sendMsg(token, to, msg, clients, socket, onlineUsers, from) {
                         from: from,
                         to: to,
                         name: token.username,
+                        sentimentScore: sentimentScore,
                       });
                     }
                   });
@@ -91,6 +94,12 @@ function sendMsg(token, to, msg, clients, socket, onlineUsers, from) {
                         from: from,
                         to: to,
                         name: token.username,
+                        sentimentScore: sentimentScore,
+                      });
+                    } else if (id == socket.id) {
+                      console.log("sent");
+                      socket.emit("msg-sentiment", {
+                        sentimentScore: sentimentScore,
                       });
                     }
                   });

@@ -53,12 +53,14 @@ function fetchChat(email, from_id, socket, clients, onlineUsers) {
                   msg: decrypt(e.message),
                   on: finalTime,
                   byMe: true,
+                  sentimentScore: e.sentimentScore,
                 };
               }
               return {
                 msg: decrypt(e.message),
                 on: finalTime,
                 byMe: false,
+                sentimentScore: e.sentimentScore,
               };
             });
             if (clients[email]) {
