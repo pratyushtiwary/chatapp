@@ -96,7 +96,7 @@ function sendMsg(token, to, msg, clients, socket, onlineUsers, from) {
                         name: token.username,
                         sentimentScore: sentimentScore,
                       });
-                    } else if (id == socket.id) {
+                    } else {
                       console.log("sent");
                       socket.emit("msg-sentiment", {
                         sentimentScore: sentimentScore,
