@@ -33,6 +33,10 @@ function fetchChat(email, from_id, socket, clients, onlineUsers) {
                   : "0" + (time.getMonth() + 1);
               const hours =
                 time.getHours() > 9 ? time.getHours() : "0" + time.getHours();
+              const day =
+                time.getUTCDate() > 9
+                  ? time.getUTCDate()
+                  : "0" + time.getUTCDate();
               const minutes =
                 time.getMinutes() > 9
                   ? time.getMinutes()
@@ -42,7 +46,7 @@ function fetchChat(email, from_id, socket, clients, onlineUsers) {
                 "-" +
                 month +
                 "-" +
-                time.getUTCDate() +
+                day +
                 "T" +
                 hours +
                 ":" +
