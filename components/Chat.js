@@ -63,6 +63,8 @@ export default function Chat({
         ? time.getMonth() + 1
         : "0" + (time.getMonth() + 1);
     const hours = time.getHours() > 9 ? time.getHours() : "0" + time.getHours();
+    const day =
+      time.getUTCDate() > 9 ? time.getUTCDate() : "0" + time.getUTCDate();
     const minutes =
       time.getMinutes() > 9 ? time.getMinutes() : "0" + time.getMinutes();
     let finalTime =
@@ -70,12 +72,12 @@ export default function Chat({
       "-" +
       month +
       "-" +
-      time.getUTCDate() +
+      day +
       "T" +
       hours +
       ":" +
       minutes +
-      ":00";
+      ":00Z";
     if (userMsg !== "") {
       if (socket) {
         socket.emit("send-msg", {
