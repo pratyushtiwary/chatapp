@@ -11,9 +11,11 @@ import { Error, Success } from "../components/Message";
 import { verify_token } from "../components/crypto";
 import Loader from "../components/Loader";
 import Link from "next/link";
+const URL = "https://chatappbackend123.herokuapp.com";
+// const URL = "http://localhost:5000";
 
 export default function Register(props) {
-  const hit = useHit("https://chatappbackend123.herokuapp.com");
+  const hit = useHit(URL);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -61,7 +63,7 @@ export default function Register(props) {
   return (
     <>
       <Head>
-        <title>Login - {APPNAME}</title>
+        <title>Register - {APPNAME}</title>
       </Head>
       <Link href="/credits" passHref>
         <a className={styles.credits}>Credits</a>
@@ -111,7 +113,7 @@ export default function Register(props) {
                 onChange={(e) => setCPass(e.currentTarget.value)}
               />
               <Button color="primary" className="button" type="submit">
-                Login
+                Register
               </Button>
             </>
           )}

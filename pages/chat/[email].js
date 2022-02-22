@@ -15,6 +15,7 @@ import SocketContext from "../../components/Socket";
 import { useRouter } from "next/router";
 const io = require("socket.io-client");
 const URL = "https://chatappbackend123.herokuapp.com";
+// const URL = "http://localhost:5000";
 
 let TOKEN;
 

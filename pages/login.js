@@ -11,9 +11,11 @@ import { Error, Success } from "../components/Message";
 import { encrypt, verify_token } from "../components/crypto";
 import Link from "next/link";
 import Loader from "../components/Loader";
+const URL = "https://chatappbackend123.herokuapp.com";
+// const URL = "http://localhost:5000";
 
 export default function Login(props) {
-  const hit = useHit("https://chatappbackend123.herokuapp.com");
+  const hit = useHit(URL);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);

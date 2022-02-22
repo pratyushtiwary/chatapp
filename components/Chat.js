@@ -59,14 +59,17 @@ export default function Chat({
     setBeingSend(true);
     const time = new Date();
     const month =
-      time.getMonth() + 1 > 9
-        ? time.getMonth() + 1
-        : "0" + (time.getMonth() + 1);
-    const hours = time.getHours() > 9 ? time.getHours() : "0" + time.getHours();
+      time.getUTCMonth() + 1 > 9
+        ? time.getUTCMonth() + 1
+        : "0" + (time.getUTCMonth() + 1);
+    const hours =
+      time.getUTCHours() > 9 ? time.getUTCHours() : "0" + time.getUTCHours();
     const day =
       time.getUTCDate() > 9 ? time.getUTCDate() : "0" + time.getUTCDate();
     const minutes =
-      time.getMinutes() > 9 ? time.getMinutes() : "0" + time.getMinutes();
+      time.getUTCMinutes() > 9
+        ? time.getUTCMinutes()
+        : "0" + time.getUTCMinutes();
     let finalTime =
       time.getFullYear() +
       "-" +
@@ -89,6 +92,7 @@ export default function Chat({
       }
 
       function genMsg({ sentimentScore }) {
+        console.log(finalTime);
         let temp = {
           msg: userMsg,
           on: finalTime,
