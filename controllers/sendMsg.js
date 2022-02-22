@@ -51,6 +51,7 @@ function sendMsg(token, to, msg, clients, socket, onlineUsers, from) {
       raw: true,
     }).then((c) => {
       let from_id = c.id;
+      const sentimentScore = analyze(msg)[1];
 
       BlockedUsers.findOne({
         where: Sequelize.and(
@@ -60,7 +61,6 @@ function sendMsg(token, to, msg, clients, socket, onlineUsers, from) {
       })
         .then((c) => {
           if (!c) {
-            const sentimentScore = analyze(msg)[1];
             Messages.create({
               id: null,
               message: encrypt(msg),
@@ -110,6 +110,24 @@ function sendMsg(token, to, msg, clients, socket, onlineUsers, from) {
               .catch((e) => {
                 console.log(e);
               });
+          } else {
+            console.log(clients[from]);
+            if (clients[from]) {
+              clients[from].forEach(function (id) {
+                socket.broadcast.to(id).emit("receive-msg", {
+                  msg,
+                  on: finalTime,
+                  byMe: true,
+                  from: from,
+                  to: to,
+                  name: token.username,
+                  sentimentScore: sentimentScore,
+                });
+                socket.emit("msg-sentiment", {
+                  sentimentScore: sentimentScore,
+                });
+              });
+            }
           }
         })
         .catch((err) => {

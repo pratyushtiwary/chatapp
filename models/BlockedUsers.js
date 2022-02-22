@@ -1,25 +1,26 @@
-const { Model, DataTypes, literal } = require('sequelize');
-const sequelize = require('../db');
+const { Model, DataTypes, literal } = require("sequelize");
+const sequelize = require("../db");
 
 class BlockedUsers extends Model {}
 
-BlockedUsers.init({
+BlockedUsers.init(
+  {
     blockedBy: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: "users",
-            key: "id"
-        },
-        unique: true
+      type: DataTypes.INTEGER,
+      references: {
+        model: "users",
+        key: "id",
+      },
     },
     blockedUser: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: "users",
-            key: "id"
-        },
-        unique: true
-    }
-},{sequelize, modelName: 'blocked_users'});
+      type: DataTypes.INTEGER,
+      references: {
+        model: "users",
+        key: "id",
+      },
+    },
+  },
+  { sequelize, modelName: "blocked_users" }
+);
 
 module.exports = BlockedUsers;
