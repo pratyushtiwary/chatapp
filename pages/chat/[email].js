@@ -18,7 +18,7 @@ const URL = "https://chatappbackend123.herokuapp.com";
 // const URL = "http://localhost:5000";
 
 let TOKEN;
-
+let cUsr = null;
 export default function Email(props) {
   const maxWidth = useMediaQuery("(max-width: 679px)");
   const [currUser, setCurrUser] = useState(null);
@@ -30,6 +30,10 @@ export default function Email(props) {
   const [msgs, setMsgs] = useState([]);
   const { email } = useRouter().query;
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    cUsr = currUser;
+  }, [currUser]);
 
   useEffect(() => {
     let mySocket;
@@ -105,7 +109,11 @@ export default function Email(props) {
         };
 
       function appendMsg(msg) {
-        setMsgs((o) => [...o, msg]);
+        if (cUsr) {
+          if (cUsr.email === msg.from || cUsr.email === msg.to) {
+            setMsgs((o) => [...o, msg]);
+          }
+        }
         setCurrUser((c) => {
           if (c) {
             let temp = c;
