@@ -56,7 +56,6 @@ export default function Chat({
 
   function sendMsg(e) {
     e.preventDefault();
-    setBeingSend(true);
     const time = new Date();
     const month =
       time.getUTCMonth() + 1 > 9
@@ -81,7 +80,8 @@ export default function Chat({
       ":" +
       minutes +
       ":00Z";
-    if (userMsg !== "") {
+    if (userMsg.replace(/\s*/, "") !== "") {
+      setBeingSend(true);
       if (socket) {
         socket.emit("send-msg", {
           to: user.email,
@@ -92,7 +92,6 @@ export default function Chat({
       }
 
       function genMsg({ sentimentScore }) {
-        console.log(finalTime);
         let temp = {
           msg: userMsg,
           on: finalTime,
