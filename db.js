@@ -1,7 +1,7 @@
 const { Sequelize } = require("sequelize");
 
 const db = new Sequelize(
-  "postgres://qaoqeapnwajafu:c691f6bc9b078d0edad825cfd09855a45611b76022be111fd1e4fe1bf1d73219@ec2-52-208-185-143.eu-west-1.compute.amazonaws.com:5432/d2f9ehnbu6k5in",
+  "postgres://sgebpejqatsrij:d204e97d88b0a27ee04000b25f1ce9c6888e7583fa10d685eec43208ac37d1bf@ec2-34-253-116-145.eu-west-1.compute.amazonaws.com:5432/dcufckmt9d32ac",
   {
     dialect: "postgres",
     dialectOptions: {
