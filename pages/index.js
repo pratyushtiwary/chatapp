@@ -72,11 +72,6 @@ export default function Index(props) {
         }
       }
 
-      function logout() {
-        storage.remove("token");
-        window.location.href = "/";
-      }
-
       const changeOnlineStatus =
         (online) =>
         ({ email }) => {
@@ -248,6 +243,12 @@ export default function Index(props) {
     });
   }
 
+  function logout() {
+    storage.remove("token");
+    setVisible(false);
+    window.location.href = "/login";
+  }
+
   function resetSearch() {
     socket.emit("resetSearch", {
       token: TOKEN.token,
@@ -288,6 +289,7 @@ export default function Index(props) {
                     onUserCardClick={changeCurrUser}
                     onSearch={Search}
                     onReset={resetSearch}
+                    onLogout={logout}
                   />
                 )}
                 {!maxWidth && (
@@ -297,6 +299,7 @@ export default function Index(props) {
                     key={3}
                     onSearch={Search}
                     onReset={resetSearch}
+                    onLogout={logout}
                   />
                 )}
                 {!isChatVisible && users[0] !== undefined && !maxWidth && (

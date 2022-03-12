@@ -1,39 +1,57 @@
 .branding {
-    display: grid;
-    grid-template-columns: 50px auto;
-    align-items: center;
-    margin-left: 10px;
-    margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 50px auto;
+  align-items: center;
+  margin-left: 10px;
+  margin-bottom: 10px;
 }
 
-.branding .appname{
-    margin-left: 10px;
-    font-weight: bold;
-    color: #FFFFFF;
+.branding .appname {
+  margin-left: 10px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.sideBar .controls {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.sideBar .logoutBtn {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin-left: 5px;
+  color: #fff;
 }
 
 .sideBar .searchInput {
-    width: 100%;
-    margin: 7.5px 0;
-    padding: 0 !important;
+  position: relative;
+  width: 100%;
+  margin: 7.5px 0;
+  padding: 0 !important;
 }
 
 .users {
-    margin-top: 5px;
-    max-height: calc(100vh - 160px);
-    overflow-y: auto;
-    overflow-x: hidden;
+  margin-top: 5px;
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .errorImg {
-    height: 200px !important;
+  height: 200px !important;
 }
 
-@media screen and (max-width: 679px){
-    .branding {
-        width: 255px;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-    }
+@media screen and (max-width: 679px) {
+  .branding {
+    width: 255px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }

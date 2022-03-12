@@ -7,11 +7,17 @@ body {
 }
 
 body {
-  background: radial-gradient(100% 197.75% at 100% 98.93%, #3B20D9 0%, #7415E4 46.54%, #64408E 99.94%) no-repeat;
+  background: radial-gradient(
+      100% 197.75% at 100% 98.93%,
+      #3b20d9 0%,
+      #7415e4 46.54%,
+      #64408e 99.94%
+    )
+    no-repeat;
   min-height: 100vh;
   min-width: 100%;
   height: 100%;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   background-attachment: fixed;
 }
 
@@ -26,17 +32,17 @@ a {
   margin: 0;
 }
 
-.MuiInputLabel-outlined{
+.MuiInputLabel-outlined {
   color: #000 !important;
 }
 
-.MuiOutlinedInput-notchedOutline{
+.MuiOutlinedInput-notchedOutline {
   border-color: #000 !important;
-  background-color: rgba(255,255,255,0.5);
+  background-color: rgba(255, 255, 255, 0.5);
   z-index: -1;
 }
 
-.input{
+.input {
   width: 95%;
   position: relative;
   left: 50%;
@@ -44,7 +50,7 @@ a {
   margin: 5px 0 !important;
 }
 
-.button{
+.button {
   width: 95%;
   position: relative;
   left: 50%;
@@ -52,18 +58,25 @@ a {
   margin: 5px 0 !important;
 }
 
-button.MuiButton-root{
-  background-color: #2FD524 !important;
+button.MuiButton-root {
+  background-color: #2fd524 !important;
   color: #fff !important;
   border-radius: 5px;
   border: 1px solid #000;
 }
 
+button.MuiButton-root.simple {
+  background-color: #fff !important;
+  color: #000 !important;
+  border-radius: 5px;
+  border: none;
+}
+
 .material-icons {
-  font-family: 'Material Icons';
+  font-family: "Material Icons";
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
+  font-size: 24px; /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -81,7 +94,7 @@ button.MuiButton-root{
   -moz-osx-font-smoothing: grayscale;
 
   /* Support for IE. */
-  font-feature-settings: 'liga';
+  font-feature-settings: "liga";
 }
 
 ::-webkit-scrollbar {
@@ -89,15 +102,15 @@ button.MuiButton-root{
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
 
 .error {
